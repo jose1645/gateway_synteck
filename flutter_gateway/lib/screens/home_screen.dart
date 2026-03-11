@@ -108,18 +108,20 @@ class _HomeScreenState extends State<HomeScreen> {
             _connectionAssets.remove(connId);
             _tagRegistry.removeConnection(connId);
           } else {
-            _connections[idx].status = status == "connected" ? "Conectado" : status;
-            _connections[idx].statusColor = status == "connected" ? Colors.greenAccent : Colors.redAccent;
+            _connections[idx].status = status == "connected" ? "Conectado" : (status == "stored" ? "En Pausa" : status);
+            _connections[idx].statusColor = status == "connected" ? Colors.greenAccent : (status == "stored" ? Colors.orangeAccent : Colors.redAccent);
             _connections[idx].lastError = status == "error" ? message : "";
+            if (data['config'] != null) _connections[idx].config = data['config'];
           }
-        } else if (status == "connected") {
+        } else if (status == "connected" || status == "stored") {
+          bool isConnected = status == "connected";
           _connections.add(GatewayConnection(
             id: connId,
             host: data['config']?['host'] ?? "Unknown",
             framer: data['config']?['framer'] ?? "tcp",
             details: details,
-            status: "Conectado",
-            statusColor: Colors.greenAccent,
+            status: isConnected ? "Conectado" : "En Pausa",
+            statusColor: isConnected ? Colors.greenAccent : Colors.orangeAccent,
             config: data['config'] ?? {},
           ));
           _connectionAssets[connId] = AssetNode(
@@ -130,6 +132,37 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         }
         _currentStep = "monitoring";
+      } else if (type == "poll_defined") {
+        final pollId = data['id'];
+        final connId = data['connection_id'];
+        
+        // Only add if not already present
+        if (!_polls.any((p) => p.id == pollId)) {
+          final newPoll = PollDefinition(
+            id: pollId, 
+            connectionId: connId,
+            tag: data['tag'],
+            address: data['address'] ?? 0,
+            count: data['count'] ?? 10,
+            slaveId: data['slave_id'] ?? 1,
+            function: data['function'] ?? 3,
+            rate: data['rate'] ?? 1000,
+            addressTags: (data['address_tags'] as Map?)?.map((k, v) => MapEntry(int.parse(k), v.toString())) ?? {},
+          );
+          _polls.add(newPoll);
+          
+          // Add to asset tree if connection exists
+          if (_connectionAssets.containsKey(connId)) {
+             _connectionAssets[connId]!.children.add(AssetNode(
+               id: pollId,
+               name: data['tag'] ?? pollId,
+               type: NodeType.poll,
+               children: [],
+               poll: newPoll,
+               parentId: "root_$connId",
+             ));
+          }
+        }
       } else if (type == "poll_update") {
         final pollId = data['id'];
         final index = _polls.indexWhere((p) => p.id == pollId);
@@ -143,6 +176,19 @@ class _HomeScreenState extends State<HomeScreen> {
           SnackBar(
             content: Text("${data['status'] == 'ok' ? '✅' : '❌'} ${data['message']}"),
             backgroundColor: data['status'] == 'ok' ? Colors.green : Colors.red,
+          )
+        );
+      } else if (type == "export_response") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(data['message']),
+            backgroundColor: data['status'] == 'ok' ? Colors.blueAccent : Colors.red,
+            duration: const Duration(seconds: 5),
+            action: data['status'] == 'ok' ? SnackBarAction(
+              label: "OK", 
+              textColor: Colors.white,
+              onPressed: () {},
+            ) : null,
           )
         );
       }
@@ -950,10 +996,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     tooltip: "Añadir Bloque de Lectura",
                   ),
                 ],
+                if (conn.status == "En Pausa")
+                  IconButton(
+                    icon: const Icon(Icons.play_arrow, color: Colors.greenAccent, size: 20),
+                    onPressed: () => _engine.sendCommand("connect", conn.config),
+                    tooltip: "Reconectar",
+                  ),
                 IconButton(
                   icon: const Icon(Icons.close, color: Colors.redAccent, size: 20),
                   onPressed: () => _engine.sendCommand("disconnect", {"connection_id": conn.id}),
-                  tooltip: "Desconectar",
+                  tooltip: "Desconectar / Eliminar",
                 ),
               ],
             ),
@@ -1187,6 +1239,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: const Icon(Icons.label_outline, size: 16, color: Colors.blueAccent),
                 onPressed: () => _showTagEditor(poll),
                 tooltip: "Editar Tags Individuales",
+              ),
+              IconButton(
+                icon: const Icon(Icons.download_for_offline_outlined, size: 16, color: Colors.greenAccent),
+                onPressed: () => _engine.sendCommand("export_csv", {"poll_id": poll.id}),
+                tooltip: "Exportar Histórico CSV",
               ),
             ],
           ),
