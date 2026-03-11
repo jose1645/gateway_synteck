@@ -1,0 +1,29 @@
+{
+    "plc_delta": {
+        "ip": "127.0.0.1",
+        "port": 10003,
+        "framer": "ascii",
+        "timeout": 2,
+        "device_id": 1,
+        "addresses": {
+            "x": 1024,
+            "y": 1280,
+            "m": 2048,
+            "d": 4096
+        }
+    },
+    "factory_io": {
+        "ip": "192.168.18.29",
+        "port": 502,
+        "timeout": 2,
+        "device_id": 1,
+        "addresses": {
+            "coils_start": 0,
+            "regs_start": 0
+        }
+    },
+    "settings": {
+        "update_interval_ms": 100,
+        "log_level": "INFO"
+    }
+}

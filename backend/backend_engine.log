@@ -1,0 +1,6 @@
+2026-03-08 11:10:20,967 [DEBUG] Using proactor: IocpProactor
+2026-03-08 11:10:25,024 [DEBUG] Received action: connect with params: {'connection_id': 'test', 'mode': 'serial', 'host': 'COM4', 'framer': 'ascii'}
+2026-03-08 11:10:25,024 [DEBUG] Connecting to COM4:0.
+2026-03-08 11:10:25,024 [DEBUG] Connecting comm
+2026-03-08 11:10:25,187 [DEBUG] Connected to comm
+2026-03-08 11:10:42,229 [DEBUG] Received action: disconnect with params: {'connection_id': 'test'}

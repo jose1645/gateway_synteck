@@ -1,0 +1,34 @@
+2026-03-08 08:05:38,694 [INFO] Assets path configured: C:\Users\User\OneDrive\Desktop\driver_factory_IO\assets
+2026-03-08 08:05:38,697 [INFO] Starting up TCP server on localhost:64369
+2026-03-08 08:05:38,701 [INFO] Flet app has started...
+2026-03-08 08:05:38,718 [INFO] App URL: tcp://localhost:64369
+2026-03-08 08:05:38,718 [INFO] Starting Flet View app...
+2026-03-08 08:05:38,718 [INFO] Looking for Flet executable at: C:\Users\User\AppData\Roaming\Python\Python312\site-packages\flet_desktop\app\flet\flet.exe
+2026-03-08 08:05:38,718 [INFO] Flet View found in: C:\Users\User\AppData\Roaming\Python\Python312\site-packages\flet_desktop\app\flet\flet.exe
+2026-03-08 08:05:39,661 [INFO] App session started
+2026-03-08 08:05:39,848 [ERROR] Unhandled error in main() handler
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Roaming\Python\Python312\site-packages\flet\app.py", line 340, in on_session_created
+    await main(session.page)
+  File "C:\Users\User\OneDrive\Desktop\driver_factory_IO\delta.py", line 68, in main
+    status_icon = ft.Icon(name="power_settings_new", color="white", size=48)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Icon.__init__() got an unexpected keyword argument 'name'
+2026-03-08 08:05:53,915 [INFO] Session was garbage collected: SrahpROHBZDFZsRk
+2026-03-08 08:14:49,285 [INFO] Assets path configured: C:\Users\User\OneDrive\Desktop\driver_factory_IO\assets
+2026-03-08 08:14:49,286 [INFO] Starting up TCP server on localhost:64644
+2026-03-08 08:14:49,289 [INFO] Flet app has started...
+2026-03-08 08:14:49,304 [INFO] App URL: tcp://localhost:64644
+2026-03-08 08:14:49,304 [INFO] Starting Flet View app...
+2026-03-08 08:14:49,305 [INFO] Looking for Flet executable at: C:\Users\User\AppData\Roaming\Python\Python312\site-packages\flet_desktop\app\flet\flet.exe
+2026-03-08 08:14:49,305 [INFO] Flet View found in: C:\Users\User\AppData\Roaming\Python\Python312\site-packages\flet_desktop\app\flet\flet.exe
+2026-03-08 08:14:49,724 [INFO] App session started
+2026-03-08 08:14:49,803 [ERROR] Unhandled error in main() handler
+Traceback (most recent call last):
+  File "C:\Users\User\AppData\Roaming\Python\Python312\site-packages\flet\app.py", line 340, in on_session_created
+    await main(session.page)
+  File "C:\Users\User\OneDrive\Desktop\driver_factory_IO\delta.py", line 218, in main
+    alignment=ft.alignment.center, margin=ft.margin.only(bottom=20)
+              ^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'flet.controls.alignment' has no attribute 'center'
+2026-03-08 08:17:42,573 [INFO] Session was garbage collected: 6Dq8Gzo2DO7onPry
